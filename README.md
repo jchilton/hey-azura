@@ -12,7 +12,7 @@ Azura listens continuously through your microphone, responds when addressed (*"H
 - 🔊 **Authentic Cloned Voice**: Synthesizes speech locally on your GPU via Chatterbox TTS (`http://localhost:8030/tts`) using extracted original Morrowind cutscenes (~1.8 – 2.0 GB VRAM usage during synthesis).
 - ⚡ **Low-VRAM Local Intelligence**: Configured for local `llama3.2:3b` on Ollama (~2.2 GB VRAM) and Whisper STT (~0.4 GB VRAM). Combined total is ~4.4 GB VRAM, leaving plenty of VRAM headroom for OpenMW / Morrowind with high-res texture packs on any 6GB+ GPU.
 - 📖 **Live UESP Integration**: Automatically searches and extracts real-time articles from `https://en.uesp.net/w/api.php` across `Morrowind:`, `Bloodmoon:`, `Tribunal:`, `Tamriel Rebuilt:`, and `Lore:` namespaces.
-- 💬 **Interactive Terminal UI**: Run in hands-free voice mode while playing, or in terminal text mode.
+- 🖥️ **Master Control Dashboard & OBS Overlay**: Feature-rich desktop GUI with audio device selection, 1-click game voice extraction, model configuration, and an animated transparent HUD overlay for stream broadcasting.
 
 ---
 
