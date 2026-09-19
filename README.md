@@ -92,3 +92,13 @@ To test the overlay in your browser or OBS without voice input:
 - `chatterbox`: URL and reference audio clone file (`azura_cavern_15s.wav`).
 - `llm`: Provider (`ollama` or `gemini`), model name (`llama3.2:3b`), and temperature.
 - `audio`: Microphone energy thresholds and pause detection timing.
+
+---
+
+## License & Legal Disclaimer
+
+This project is licensed under the [MIT License](file:///home/jchilton/Code/hey-azura/LICENSE).
+
+> [!NOTE]
+> **Trademark Disclaimer**: *The Elder Scrolls*, *Morrowind*, *Tribunal*, *Bloodmoon*, *Bethesda*, *Bethesda Softworks*, *ZeniMax*, and related logos are registered trademarks or trademarks of ZeniMax Media Inc.  
+> **Hey Azura** is an independent, non-commercial open-source companion tool. It is not affiliated with, endorsed by, or sponsored by Bethesda Softworks LLC, ZeniMax Media Inc., or their affiliates. No game assets or copyrighted audio files are distributed with this software.
