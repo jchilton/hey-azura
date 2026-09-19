@@ -26,7 +26,9 @@ Azura listens continuously through your microphone, responds when addressed (*"H
 * **LLM Engine (Pick One)**:
   * **Google Gemini (Recommended / Zero Local Hardware Required)**: Get a free API key at [Google AI Studio](https://aistudio.google.com/). *(Note: Free tier keys can hit rate limits or quota caps after just 2–3 queries. For unlimited, reliable usage, local Ollama or a paid API key is recommended).*
   * **Local Ollama (100% Offline GPU)**: Download [Ollama for Windows](https://ollama.com/) (`ollama run llama3.2:3b`).
-  * **OpenAI / OpenRouter / Custom Endpoint**: Paste your API key & Base URL in Settings.
+* **Chatterbox TTS (For Lady Azura's Voice Synthesis)**:
+  * **Local GPU Mode (Default)**: Requires [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/). Hey Azura automatically manages the local Chatterbox container (`docker run -d -p 8030:8030 chatterbox-tts`).
+  * **Remote Server Mode**: If Chatterbox is running on another machine on your LAN, enter its IP address in Settings (no local Docker required).
 * **Morrowind Game Files** (Optional, for voice cloning):
   * Any installed copy of *The Elder Scrolls III: Morrowind* (Steam, GOG, or CD).
 
