@@ -24,10 +24,12 @@ dist/
 *.egg-info/
 .eggs/
 
-# Media & Audio Recordings (temporary test recordings & output audio)
+# Media & Audio Files (voice samples, temporary test recordings & output audio)
 *.wav
 *.mp3
 *.ogg
+*.flac
+*.m4a
 
 # Logs
 *.log
