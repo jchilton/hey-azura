@@ -5,12 +5,16 @@ import logging
 import numpy as np
 import sounddevice as sd
 
-from PySide6.QtCore import Qt, QTimer, Slot
+from PySide6.QtCore import Qt, QTimer, Slot, QObject, Signal
 from PySide6.QtGui import QFont, QIcon, QColor, QPalette
 from PySide6.QtWidgets import (
     QApplication, QDialog, QVBoxLayout, QHBoxLayout, QGridLayout,
     QLabel, QComboBox, QLineEdit, QPushButton, QCheckBox, QProgressBar,
-    QGroupBox, QTabWidget, QWidget, QMessageBox
+    QGroupBox, QTabWidget, QWidget, QMessageBox, QFileDialog
+)
+
+from core.voice_extractor import (
+    find_morrowind_video, extract_azura_voice_from_bik, upload_voice_sample_to_chatterbox
 )
 
 logger = logging.getLogger(__name__)
@@ -227,9 +231,27 @@ class AzuraSettingsDialog(QDialog):
         self.port_edit.setPlaceholderText("8030")
         tts_layout.addWidget(self.port_edit, 1, 1)
 
+        mw_path_val = self.config.get("morrowind_path", "")
+        tts_layout.addWidget(QLabel("Morrowind Directory:"), 2, 0)
+        mw_layout = QHBoxLayout()
+        self.mw_path_edit = QLineEdit(mw_path_val)
+        self.mw_path_edit.setPlaceholderText("Path to Morrowind installation (e.g. /home/.../Morrowind)")
+        mw_layout.addWidget(self.mw_path_edit)
+
+        self.browse_mw_btn = QPushButton("Browse...")
+        self.browse_mw_btn.clicked.connect(self._browse_morrowind_dir)
+        mw_layout.addWidget(self.browse_mw_btn)
+
+        self.extract_voice_btn = QPushButton("Extract Voice Sample")
+        self.extract_voice_btn.setToolTip("Locates mw_cavern.bik in Morrowind Data Files/Video and extracts PCM WAV for Chatterbox voice cloning")
+        self.extract_voice_btn.clicked.connect(self._extract_game_voice_sample)
+        mw_layout.addWidget(self.extract_voice_btn)
+
+        tts_layout.addLayout(mw_layout, 2, 1)
+
         self.manage_docker_cb = QCheckBox("Auto-manage local Chatterbox Docker container on startup/exit")
         self.manage_docker_cb.setChecked(chatterbox_cfg.get("manage_docker", True))
-        tts_layout.addWidget(self.manage_docker_cb, 2, 0, 1, 2)
+        tts_layout.addWidget(self.manage_docker_cb, 3, 0, 1, 2)
 
         main_layout.addWidget(tts_box)
 
@@ -522,6 +544,37 @@ class AzuraSettingsDialog(QDialog):
             self.vu_bar.setValue(0)
             self.test_mic_btn.setText("Test Microphone")
 
+    def _browse_morrowind_dir(self):
+        dir_path = QFileDialog.getExistingDirectory(self, "Select Morrowind Installation Directory")
+        if dir_path:
+            self.mw_path_edit.setText(dir_path)
+
+    def _extract_game_voice_sample(self):
+        mw_dir = self.mw_path_edit.text().strip()
+        if not mw_dir or not os.path.exists(mw_dir):
+            QMessageBox.warning(self, "Morrowind Directory Invalid", "Please select a valid Morrowind installation directory.")
+            return
+
+        bik_path = find_morrowind_video(mw_dir)
+        if not bik_path:
+            QMessageBox.warning(self, "Video File Not Found", f"Could not locate 'mw_cavern.bik' or 'mw_intro.bik' in '{mw_dir}'.")
+            return
+
+        out_wav = os.path.join("azura_voice_samples", "azura_cavern_15s.wav")
+        ok, msg = extract_azura_voice_from_bik(bik_path, out_wav)
+        if not ok:
+            QMessageBox.critical(self, "Voice Extraction Failed", msg)
+            return
+
+        # Upload to Chatterbox server if available
+        c_host = self.host_edit.text().strip() or "localhost"
+        c_port = self.port_edit.text().strip() or "8030"
+        c_url = f"http://{c_host}:{c_port}"
+        up_ok, up_msg = upload_voice_sample_to_chatterbox(c_url, out_wav)
+        
+        info_msg = f"{msg}\n\n{up_msg}" if up_ok else f"{msg}\n\nNote: {up_msg}"
+        QMessageBox.information(self, "Voice Extraction Complete", info_msg)
+
     def _save_settings(self):
         """Write selected settings back to config.json."""
         if self.mic_stream:
@@ -533,6 +586,9 @@ class AzuraSettingsDialog(QDialog):
 
         in_idx = self.input_combo.currentData()
         out_idx = self.output_combo.currentData()
+
+        # Update Morrowind Path
+        self.config["morrowind_path"] = self.mw_path_edit.text().strip()
 
         # Update Audio config
         audio_cfg = self.config.setdefault("audio", {})
