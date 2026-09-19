@@ -88,12 +88,15 @@ To test the overlay in your browser or OBS without voice input:
 
 ---
 
-## Configuration (`config.json`)
+## Configuration & Settings
 
-- `wake_words`: Trigger phrases (`["hey azura", "azura", "lady azura", "hail azura"]`).
-- `chatterbox`: URL and reference audio clone file (`azura_cavern_15s.wav`).
-- `llm`: Provider (`ollama` or `gemini`), model name (`llama3.2:3b`), and temperature.
-- `audio`: Microphone energy thresholds and pause detection timing.
+All application settings can be configured visually through the **Settings (⚙️)** dialog in the Master Control Dashboard:
+* **Audio Devices**: Select your primary microphone and speaker output devices.
+* **Data Sources**: Toggle search indexing for *Morrowind (Main Game)*, *Tamriel Rebuilt*, and expansion expansions.
+* **Model Configuration**: Choose between local **Ollama** or cloud **Google Gemini** / **OpenAI**, manage API keys, and select Whisper STT models.
+* **Voice Cloning**: Set up Chatterbox host/port, auto-manage Docker containers, and extract Azura's voice in 1 click.
+
+*Advanced users can also manually edit `config.json` in the application root folder.*
 
 ---
 
