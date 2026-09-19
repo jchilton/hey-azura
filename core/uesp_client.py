@@ -77,11 +77,28 @@ class UESPClient:
         results = []
         seen_titles = set()
 
-        # Build list of title namespaces based on allowed data sources
-        title_searches = [f"Morrowind:{kwd}"]
-        if not data_sources or data_sources.get("tamriel_rebuilt", True):
-            title_searches.append(f"Tamriel Rebuilt:{kwd}")
-        title_searches.extend([f"Lore:{kwd}", kwd])
+        # Build list of title namespaces based on allowed data sources (including singular variations for plural queries)
+        kwd_singular = kwd
+        if kwd.endswith("s") and len(kwd) > 3 and not kwd.endswith("ss"):
+            if kwd.endswith("ves") and len(kwd) > 4:
+                kwd_singular = kwd[:-3] + "f"
+            elif kwd.endswith("ies") and len(kwd) > 4:
+                kwd_singular = kwd[:-3] + "y"
+            else:
+                kwd_singular = kwd[:-1]
+
+        keywords_to_try = [kwd]
+        if kwd_singular != kwd:
+            keywords_to_try.append(kwd_singular)
+
+        title_searches = []
+        for k in keywords_to_try:
+            title_searches.append(f"Morrowind:{k}")
+            if not data_sources or data_sources.get("goty", True):
+                title_searches.extend([f"Bloodmoon:{k}", f"Tribunal:{k}"])
+            if not data_sources or data_sources.get("tamriel_rebuilt", True):
+                title_searches.append(f"Tamriel Rebuilt:{k}")
+            title_searches.extend([f"Lore:{k}", k])
 
         for ts in title_searches:
             try:
@@ -112,12 +129,14 @@ class UESPClient:
 
         # Phase 2: Full-text search to fill remaining slots or if no title match
         if len(results) < limit:
-            full_text_queries = [
-                f"Morrowind:{kwd}",
-                f"Tamriel Rebuilt:{kwd}",
-                kwd,
-                query
-            ]
+            full_text_queries = []
+            for k in keywords_to_try:
+                full_text_queries.append(f"Morrowind:{k}")
+                if not data_sources or data_sources.get("goty", True):
+                    full_text_queries.extend([f"Bloodmoon:{k}", f"Tribunal:{k}"])
+                if not data_sources or data_sources.get("tamriel_rebuilt", True):
+                    full_text_queries.append(f"Tamriel Rebuilt:{k}")
+                full_text_queries.extend([k, query])
             for sq in full_text_queries:
                 params = {
                     "action": "query",
