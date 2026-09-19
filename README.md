@@ -9,8 +9,8 @@ Azura listens continuously through your microphone, responds when addressed (*"H
 ## Features
 
 - 🎙️ **Hands-free Voice Activation**: Powered by local `faster-whisper` (`tiny.en`), filtering background game audio and triggering on *"Hey Azura"*, *"Azura"*, or *"Lady Azura"*.
-- 🔊 **Authentic Cloned Voice**: Synthesizes speech locally on your GPU via Chatterbox TTS (`http://localhost:8030/tts`) using extracted original Morrowind cinematics (`azura_cavern_15s.wav` / `azura_intro_12s.wav`).
-- ⚡ **Low-VRAM Local Intelligence**: Configured for local `llama3.2:3b` on Ollama (`http://localhost:11434`), using only ~2.2 GB VRAM and generating >250 tokens/sec, leaving plenty of VRAM for Morrowind / OpenMW with high-res textures.
+- 🔊 **Authentic Cloned Voice**: Synthesizes speech locally on your GPU via Chatterbox TTS (`http://localhost:8030/tts`) using extracted original Morrowind cutscenes (~1.8 – 2.0 GB VRAM usage during synthesis).
+- ⚡ **Low-VRAM Local Intelligence**: Configured for local `llama3.2:3b` on Ollama (~2.2 GB VRAM) and Whisper STT (~0.4 GB VRAM). Combined total is ~4.4 GB VRAM, leaving plenty of VRAM headroom for OpenMW / Morrowind with high-res texture packs on any 6GB+ GPU.
 - 📖 **Live UESP Integration**: Automatically searches and extracts real-time articles from `https://en.uesp.net/w/api.php` across `Morrowind:`, `Tamriel Rebuilt:`, and `Lore:` namespaces.
 - 💬 **Interactive Terminal UI**: Run in hands-free voice mode while playing, or in terminal text mode.
 

@@ -253,6 +253,10 @@ class AzuraSettingsDialog(QDialog):
         self.manage_docker_cb.setChecked(chatterbox_cfg.get("manage_docker", True))
         tts_layout.addWidget(self.manage_docker_cb, 3, 0, 1, 2)
 
+        vram_lbl = QLabel("💡 VRAM Footprint: Chatterbox TTS uses ~1.8 – 2.0 GB VRAM on GPU during voice synthesis.")
+        vram_lbl.setStyleSheet("color: #a08dc0; font-size: 11px; font-style: italic;")
+        tts_layout.addWidget(vram_lbl, 4, 0, 1, 2)
+
         main_layout.addWidget(tts_box)
 
         # 3. Whisper Speech Recognition Group Box
