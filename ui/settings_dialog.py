@@ -302,9 +302,14 @@ class AzuraSettingsDialog(QDialog):
         self.api_key_edit.setPlaceholderText("Enter API Key (Gemini, OpenAI, etc.)")
         llm_layout.addWidget(self.api_key_edit, 2, 1)
 
-        llm_layout.addWidget(QLabel("Model Name:"), 3, 0)
+        self.api_key_note = QLabel("⚠️ Note: Gemini free API keys (from Google AI Studio) are free to generate, but have strict rate/quota limits and will run out quickly under heavy usage.")
+        self.api_key_note.setStyleSheet("color: #d4a755; font-size: 11px; font-style: italic;")
+        self.api_key_note.setWordWrap(True)
+        llm_layout.addWidget(self.api_key_note, 3, 1)
+
+        llm_layout.addWidget(QLabel("Model Name:"), 4, 0)
         self.model_combo = QComboBox()
-        llm_layout.addWidget(self.model_combo, 3, 1)
+        llm_layout.addWidget(self.model_combo, 4, 1)
 
         self.provider_combo.currentTextChanged.connect(self._on_provider_changed)
         self.api_url_edit.editingFinished.connect(lambda: self._populate_model_options(self.provider_combo.currentText(), self.api_url_edit.text().strip(), self.api_key_edit.text().strip()))

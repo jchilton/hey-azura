@@ -24,7 +24,7 @@ Azura listens continuously through your microphone, responds when addressed (*"H
   * Install via terminal: `winget install ffmpeg`
   * Or download `ffmpeg.exe` from [ffmpeg.org](https://ffmpeg.org/download.html) and place `ffmpeg.exe` directly inside the `HeyAzura` application folder.
 * **LLM Engine (Pick One)**:
-  * **Google Gemini (Recommended / Zero Local Hardware Required)**: Get a free API key at [Google AI Studio](https://aistudio.google.com/).
+  * **Google Gemini (Recommended / Zero Local Hardware Required)**: Get a free API key at [Google AI Studio](https://aistudio.google.com/). *(Note: Free tier keys are 100% free to generate, but have strict rate/daily quota limits and will run out quickly under heavy usage).*
   * **Local Ollama (100% Offline GPU)**: Download [Ollama for Windows](https://ollama.com/) (`ollama run llama3.2:3b`).
   * **OpenAI / OpenRouter / Custom Endpoint**: Paste your API key & Base URL in Settings.
 * **Morrowind Game Files** (Optional, for voice cloning):
