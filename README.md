@@ -16,9 +16,34 @@ Azura listens continuously through your microphone, responds when addressed (*"H
 
 ---
 
-## Quick Start
+## Windows Installation & Setup Guide
 
-### 1. Hands-Free Voice Mode (Default)
+### 1. System Requirements & Prerequisites
+* **Operating System**: Windows 10 or Windows 11 (64-bit).
+* **FFmpeg** (Required for extracting voice samples from game cutscenes):
+  * Install via terminal: `winget install ffmpeg`
+  * Or download `ffmpeg.exe` from [ffmpeg.org](https://ffmpeg.org/download.html) and place `ffmpeg.exe` directly inside the `HeyAzura` application folder.
+* **LLM Engine (Pick One)**:
+  * **Google Gemini (Recommended / Zero Local Hardware Required)**: Get a free API key at [Google AI Studio](https://aistudio.google.com/).
+  * **Local Ollama (100% Offline GPU)**: Download [Ollama for Windows](https://ollama.com/) (`ollama run llama3.2:3b`).
+  * **OpenAI / OpenRouter / Custom Endpoint**: Paste your API key & Base URL in Settings.
+* **Morrowind Game Files** (Optional, for voice cloning):
+  * Any installed copy of *The Elder Scrolls III: Morrowind* (Steam, GOG, or CD).
+
+---
+
+### 2. Getting Started on Windows (Standalone Release)
+1. Download and extract **`HeyAzura-v1.0.0.zip`**.
+2. Double-click **`HeyAzura.exe`** to launch the Master Control Dashboard.
+3. Click **Settings** (⚙️) in the top menu bar:
+   * **LLM Settings**: Select your provider (`gemini`, `ollama`, or `openai`), select your model, and enter your API key if applicable.
+   * **Voice Extraction**: Click **Browse...** to select your Morrowind installation folder (e.g., `C:\Program Files (x86)\Steam\steamapps\common\Morrowind`) and click **Extract Voice Sample**.
+   * Click **Save**.
+4. Speak naturally into your microphone: *"Hey Azura, where do I find Goldbrand?"*
+
+---
+
+## Quick Start (Linux / Source Mode)
 Run from your terminal while playing Morrowind:
 ```bash
 ~/Code/hey-azura/run.sh
