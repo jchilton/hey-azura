@@ -38,11 +38,29 @@ def extract_azura_voice_from_bik(bik_path: str, output_wav_path: str, duration_s
     """Extract voice sample from a single BIK file."""
     return extract_azura_voice_from_biks([bik_path], output_wav_path, duration_per_file=duration_sec)
 
+def get_ffmpeg_path() -> Optional[str]:
+    """Find ffmpeg binary cross-platform (Linux, macOS, and Windows)."""
+    bin_path = shutil.which("ffmpeg") or shutil.which("ffmpeg.exe")
+    if bin_path:
+        return bin_path
+
+    app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    local_candidates = [
+        os.path.join(app_dir, "ffmpeg.exe"),
+        os.path.join(app_dir, "ffmpeg", "bin", "ffmpeg.exe"),
+        r"C:\ffmpeg\bin\ffmpeg.exe",
+        r"C:\Program Files\ffmpeg\bin\ffmpeg.exe",
+    ]
+    for c in local_candidates:
+        if os.path.exists(c):
+            return c
+    return None
+
 def extract_azura_voice_from_biks(bik_paths: List[str], output_wav_path: str, duration_per_file: float = 10.0) -> Tuple[bool, str]:
     """Use ffmpeg to extract and concatenate samples from all found Morrowind cutscenes into a single high-quality reference audio track."""
-    ffmpeg_bin = shutil.which("ffmpeg")
+    ffmpeg_bin = get_ffmpeg_path()
     if not ffmpeg_bin:
-        return False, "ffmpeg binary not found in system PATH. Please install ffmpeg."
+        return False, "ffmpeg binary not found in system PATH or app folder. Please install ffmpeg or place ffmpeg.exe in the app folder."
 
     if not bik_paths:
         return False, "No Morrowind BIK video files provided."
