@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from core.voice_extractor import (
-    find_morrowind_video, extract_azura_voice_from_bik, upload_voice_sample_to_chatterbox
+    find_all_morrowind_videos, extract_azura_voice_from_biks, upload_voice_sample_to_chatterbox
 )
 
 logger = logging.getLogger(__name__)
@@ -555,13 +555,13 @@ class AzuraSettingsDialog(QDialog):
             QMessageBox.warning(self, "Morrowind Directory Invalid", "Please select a valid Morrowind installation directory.")
             return
 
-        bik_path = find_morrowind_video(mw_dir)
-        if not bik_path:
-            QMessageBox.warning(self, "Video File Not Found", f"Could not locate 'mw_cavern.bik' or 'mw_intro.bik' in '{mw_dir}'.")
+        bik_paths = find_all_morrowind_videos(mw_dir)
+        if not bik_paths:
+            QMessageBox.warning(self, "Video Files Not Found", f"Could not locate 'mw_cavern.bik', 'mw_intro.bik', or 'mw_end.bik' in '{mw_dir}'.")
             return
 
         out_wav = os.path.join("azura_voice_samples", "azura_cavern_15s.wav")
-        ok, msg = extract_azura_voice_from_bik(bik_path, out_wav)
+        ok, msg = extract_azura_voice_from_biks(bik_paths, out_wav, duration_per_file=10.0)
         if not ok:
             QMessageBox.critical(self, "Voice Extraction Failed", msg)
             return
