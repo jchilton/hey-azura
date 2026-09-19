@@ -302,7 +302,7 @@ class AzuraSettingsDialog(QDialog):
         self.api_key_edit.setPlaceholderText("Enter API Key (Gemini, OpenAI, etc.)")
         llm_layout.addWidget(self.api_key_edit, 2, 1)
 
-        self.api_key_note = QLabel("⚠️ Note: Gemini free API keys (from Google AI Studio) are free to generate, but have strict rate/quota limits and will run out quickly under heavy usage.")
+        self.api_key_note = QLabel("⚠️ Note: Gemini free API keys (from Google AI Studio) can hit rate limits or quota caps after just 2–3 queries. For unlimited usage, local Ollama or a paid key is recommended.")
         self.api_key_note.setStyleSheet("color: #d4a755; font-size: 11px; font-style: italic;")
         self.api_key_note.setWordWrap(True)
         llm_layout.addWidget(self.api_key_note, 3, 1)
