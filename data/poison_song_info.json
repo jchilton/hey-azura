@@ -1,0 +1,22 @@
+{
+  "mod_name": "Tamriel Rebuilt - Poison Song (v26.08+)",
+  "description": "Tamriel Rebuilt major release v26.08 titled 'Poison Song', incorporating content expansions across mainland Morrowind, Telvanni Peninsula, and revamps of classic lore.",
+  "lore_reference": "Poison Song is also a famous 7-volume book series by Waughin Jarth detailing Tay, a Dunmer noble who hears the maddening song of Dagoth Ur and House Dagoth.",
+  "key_locations": [
+    "Firewatch - Imperial navy stronghold on the Northern coast of mainland Morrowind",
+    "Helnim - Wealthy trading port under House Telvanni influence",
+    "Necrom - Holy city of the Dead and the Tribunal Temple",
+    "Tel Aruhn & Telvanni Isles - Ancient wizard towers of the Telvanni Lords",
+    "Roryn's Bluff - Scenic bluffs along the Padomaic Ocean"
+  ],
+  "factions": [
+    "House Telvanni (Mainland councils)",
+    "Imperial Legion (Firewatch garrison)",
+    "Tribunal Temple (Necrom ordinators and monks)",
+    "House Indoril (Heartlands and sacred sites)"
+  ],
+  "quest_guidance": [
+    "For Poison Song book locations: Available across libraries in Vivec Jobasha's Rare Books, Balmora, and Telvanni wizard towers.",
+    "For Tamriel Rebuilt Poison Song content: Visit Firewatch Mages Guild and Helnim docks to start new mainland questlines."
+  ]
+}

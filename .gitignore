@@ -1,0 +1,40 @@
+# Secret configuration and API keys
+config.json
+.env
+.env.*
+*.key
+*.pem
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python Cache & Compiled Files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Build and Distribution Artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Media & Audio Recordings (temporary test recordings & output audio)
+*.wav
+*.mp3
+*.ogg
+
+# Logs
+*.log
+logs/
+
+# IDE & OS Metadata
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

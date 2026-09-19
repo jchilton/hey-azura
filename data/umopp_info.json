@@ -1,0 +1,41 @@
+{
+  "mod_name": "UMOPP - Universal Morrowind Official Plugins Patch",
+  "description": "Comprehensive patch fixing mesh errors, script bugs, pathing, and dialogue inconsistencies across all 8 of Bethesda's official Morrowind plugins.",
+  "included_plugins": [
+    {
+      "name": "Bitter Coast Sounds",
+      "summary": "Adds unique ambient sound effects (dragonflies, frogs, gulls) along the Bitter Coast region.",
+      "umopp_fixes": "Fixes sound generator positions, script loops, and dialogue triggers."
+    },
+    {
+      "name": "Siege at Firemoth",
+      "summary": "Send-off quest given by Mara in Seyda Neen to retake Fort Firemoth island from Griss the Lich and his undead horde.",
+      "umopp_fixes": "Fixes follower AI navigation, skeleton respawns, Ward of Akavir shield stats, and boat transportation script."
+    },
+    {
+      "name": "Helm of Tohan",
+      "summary": "Quest to track down the legendary Helm of Tohan in Onnissiralis or Sheogorad islands.",
+      "umopp_fixes": "Corrects quest stage journal indices and enchantment charge attributes."
+    },
+    {
+      "name": "Master Index",
+      "summary": "Quest given by Folms Mirel in Caldera Guild of Mages to collect all 10 Propylon Indices and forge the Master Propylon Index.",
+      "umopp_fixes": "Fixes Master Index teleport destination coordinates and dialogue topic loops."
+    },
+    {
+      "name": "Leveled Magicka",
+      "summary": "Recalculates maximum magicka pool dynamically based on Intelligence stat multipliers.",
+      "umopp_fixes": "Eliminates magicka loss on load game and fortify attribute exploits."
+    },
+    {
+      "name": "Area Effect Arrows",
+      "summary": "Adds elemental area-effect arrows sold by Aradraen in Vivec Foreign Quarter.",
+      "umopp_fixes": "Fixes arrow collision meshes and shop inventory restock counters."
+    },
+    {
+      "name": "Entertainers",
+      "summary": "Allows playing instruments, telling jokes, and dancing at Eight Plates tavern in Balmora.",
+      "umopp_fixes": "Fixes tavern keeper payment calculations and lute animation timing."
+    }
+  ]
+}

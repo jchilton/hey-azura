@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Azura Overlay</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: transparent !important;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .overlay-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .star-rotator {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center center;
+      animation: spinStar 2.6s linear infinite;
+      animation-play-state: paused;
+      will-change: transform;
+    }
+
+    .state-researching .star-rotator {
+      animation-play-state: running;
+    }
+
+    .star-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      transition: filter 0.4s ease-in-out, transform 0.3s ease-out;
+      transform-origin: center center;
+      will-change: transform, filter;
+    }
+
+    /* --- STATE: IDLE (Normal resting state) --- */
+    .state-idle .star-img {
+      transform: scale(1.0);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    /* --- STATE: LISTENING (Detected "Hey Azura", sits still, glowing pale yellow while prompt is spoken) --- */
+    .state-listening .star-img {
+      transform: scale(1.04);
+      filter: drop-shadow(0 0 16px rgba(255, 252, 195, 0.95))
+              drop-shadow(0 0 35px rgba(255, 245, 140, 0.7))
+              drop-shadow(0 0 65px rgba(255, 235, 100, 0.4));
+      animation: paleGlow 2.0s ease-in-out infinite alternate;
+    }
+
+    /* --- STATE: RESEARCHING (Prompt complete, glow goes away, spins while researching & generating) --- */
+    .state-researching .star-img {
+      transform: scale(1.0);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    /* --- STATE: SPEAKING (Stops spinning, glows pale yellow again while sound is playing) --- */
+    .state-speaking .star-img {
+      transform: scale(1.04);
+      filter: drop-shadow(0 0 16px rgba(255, 252, 195, 0.95))
+              drop-shadow(0 0 35px rgba(255, 245, 140, 0.7))
+              drop-shadow(0 0 65px rgba(255, 235, 100, 0.4));
+      animation: paleGlow 2.0s ease-in-out infinite alternate;
+    }
+
+    @keyframes spinStar {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes paleGlow {
+      0% {
+        transform: scale(1.02);
+        filter: drop-shadow(0 0 12px rgba(255, 252, 195, 0.85))
+                drop-shadow(0 0 28px rgba(255, 245, 140, 0.55));
+      }
+      100% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 20px rgba(255, 255, 215, 0.98))
+                drop-shadow(0 0 45px rgba(255, 245, 150, 0.8))
+                drop-shadow(0 0 75px rgba(255, 235, 110, 0.45));
+      }
+    }
+
+    /* Optional debug badge (toggle with 'D' key) */
+    .debug-badge {
+      position: absolute;
+      bottom: 8px;
+      padding: 3px 8px;
+      font-family: monospace;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(0, 0, 0, 0.55);
+      border-radius: 4px;
+      pointer-events: none;
+      display: none;
+    }
+    body.show-debug .debug-badge {
+      display: block;
+    }
+  </style>
+</head>
+<body class="state-idle">
+  <div class="overlay-container" id="container">
+    <div class="star-rotator" id="rotator">
+      <img src="azuras-star.png" alt="Azura's Star" class="star-img" id="star">
+    </div>
+    <div class="debug-badge" id="badge">IDLE</div>
+  </div>
+
+  <script>
+    const body = document.body;
+    const badge = document.getElementById('badge');
+    let currentState = 'idle';
+
+    function setState(newState) {
+      if (!newState || newState === currentState) return;
+      
+      body.classList.remove('state-idle', 'state-listening', 'state-researching', 'state-speaking');
+      
+      if (newState === 'listening') {
+        body.classList.add('state-listening');
+      } else if (newState === 'researching') {
+        body.classList.add('state-researching');
+      } else if (newState === 'speaking') {
+        body.classList.add('state-speaking');
+      } else {
+        body.classList.add('state-idle');
+        newState = 'idle';
+      }
+      
+      currentState = newState;
+      badge.textContent = newState.toUpperCase();
+      console.log('[Azura Overlay] State changed to:', newState);
+    }
+
+    // Connect to Server-Sent Events for real-time status from Hey Azura
+    function connectSSE() {
+      const evtSource = new EventSource('/events');
+      
+      evtSource.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data && data.state) {
+            setState(data.state);
+          }
+        } catch (e) {
+          console.error('SSE JSON parse error:', e);
+        }
+      };
+
+      evtSource.onerror = () => {
+        console.warn('SSE connection disconnected. Reconnecting in 2s...');
+        evtSource.close();
+        setTimeout(connectSSE, 2000);
+      };
+    }
+
+    connectSSE();
+
+    // Hotkeys for testing in browser:
+    // 1: Idle, 2: Listening (glow & still), 3: Researching (spin, no glow), 4: Speaking (glow & still), D: Debug
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '1') setState('idle');
+      if (e.key === '2') setState('listening');
+      if (e.key === '3') setState('researching');
+      if (e.key === '4') setState('speaking');
+      if (e.key === 'd' || e.key === 'D') body.classList.toggle('show-debug');
+    });
+  </script>
+</body>
+</html>
