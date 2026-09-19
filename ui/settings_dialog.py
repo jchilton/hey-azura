@@ -10,7 +10,7 @@ from PySide6.QtGui import QFont, QIcon, QColor, QPalette
 from PySide6.QtWidgets import (
     QApplication, QDialog, QVBoxLayout, QHBoxLayout, QGridLayout,
     QLabel, QComboBox, QLineEdit, QPushButton, QCheckBox, QProgressBar,
-    QGroupBox, QTabWidget, QWidget, QMessageBox, QFileDialog
+    QGroupBox, QTabWidget, QWidget, QMessageBox, QFileDialog, QSizePolicy
 )
 
 from core.voice_extractor import (
@@ -129,7 +129,7 @@ class AzuraSettingsDialog(QDialog):
         self.sig_bridge = SettingsSignalBridge()
 
         self.setWindowTitle("Lady Azura Companion - Configuration & Settings")
-        self.resize(540, 680)
+        self.resize(920, 700)
         self.setStyleSheet(DARK_TWILIGHT_STYLE)
 
         self._load_config()
@@ -187,6 +187,14 @@ class AzuraSettingsDialog(QDialog):
         sub_label.setStyleSheet("color: #9d8db8; font-size: 12px; margin-bottom: 12px;")
         main_layout.addWidget(sub_label)
 
+        # 2-Column Main Layout
+        cols_layout = QHBoxLayout()
+
+        # ==========================================
+        # LEFT COLUMN: Audio Devices & Data Sources
+        # ==========================================
+        left_col = QVBoxLayout()
+
         # 1. Audio Devices Group Box
         audio_box = QGroupBox("Audio Devices Setup")
         audio_layout = QGridLayout(audio_box)
@@ -211,9 +219,36 @@ class AzuraSettingsDialog(QDialog):
         self.test_mic_btn.toggled.connect(self._toggle_mic_test)
         audio_layout.addWidget(self.test_mic_btn, 3, 1, Qt.AlignRight)
 
-        main_layout.addWidget(audio_box)
+        left_col.addWidget(audio_box)
 
-        # 2. Chatterbox TTS Server Group Box
+        # 2. Data Sources & Content Packs Group Box
+        ds_box = QGroupBox("Data Sources & Content Packs")
+        ds_layout = QVBoxLayout(ds_box)
+
+        ds_cfg = self.config.get("data_sources", {})
+
+        self.cb_mw = QCheckBox("Morrowind Base Game (Required)")
+        self.cb_mw.setChecked(True)
+        self.cb_mw.setEnabled(False)
+        ds_layout.addWidget(self.cb_mw)
+
+        self.cb_goty = QCheckBox("GOTY Expansions (Tribunal & Bloodmoon)")
+        self.cb_goty.setChecked(ds_cfg.get("goty", True))
+        ds_layout.addWidget(self.cb_goty)
+
+        self.cb_tr = QCheckBox("Tamriel Rebuilt (Mainland & Poison Song)")
+        self.cb_tr.setChecked(ds_cfg.get("tamriel_rebuilt", True))
+        ds_layout.addWidget(self.cb_tr)
+
+        left_col.addWidget(ds_box)
+        left_col.addStretch(1)
+
+        # ==========================================
+        # RIGHT COLUMN: Chatterbox, Whisper, LLM
+        # ==========================================
+        right_col = QVBoxLayout()
+
+        # 3. Chatterbox TTS Server Group Box
         tts_box = QGroupBox("Chatterbox TTS Server Settings")
         tts_layout = QGridLayout(tts_box)
 
@@ -257,9 +292,9 @@ class AzuraSettingsDialog(QDialog):
         vram_lbl.setStyleSheet("color: #a08dc0; font-size: 11px; font-style: italic;")
         tts_layout.addWidget(vram_lbl, 4, 0, 1, 2)
 
-        main_layout.addWidget(tts_box)
+        right_col.addWidget(tts_box)
 
-        # 3. Whisper Speech Recognition Group Box
+        # 4. Whisper Speech Recognition Group Box
         whisper_box = QGroupBox("Whisper Speech Recognition Settings (Local STT)")
         whisper_layout = QGridLayout(whisper_box)
 
@@ -272,9 +307,9 @@ class AzuraSettingsDialog(QDialog):
             self.whisper_combo.setCurrentIndex(idx)
         whisper_layout.addWidget(self.whisper_combo, 0, 1)
 
-        main_layout.addWidget(whisper_box)
+        right_col.addWidget(whisper_box)
 
-        # 4. LLM Engine Group Box
+        # 5. LLM Engine Group Box
         llm_box = QGroupBox("LLM Engine Settings")
         llm_layout = QGridLayout(llm_box)
 
@@ -309,7 +344,8 @@ class AzuraSettingsDialog(QDialog):
         self.api_key_note = QLabel("⚠️ Note: Gemini free API keys (from Google AI Studio) can hit rate limits or quota caps after just 2–3 queries. For unlimited usage, local Ollama or a paid key is recommended.")
         self.api_key_note.setStyleSheet("color: #d4a755; font-size: 11px; font-style: italic;")
         self.api_key_note.setWordWrap(True)
-        llm_layout.addWidget(self.api_key_note, 3, 1)
+        self.api_key_note.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)
+        llm_layout.addWidget(self.api_key_note, 3, 0, 1, 2)
 
         llm_layout.addWidget(QLabel("Model Name:"), 4, 0)
         self.model_combo = QComboBox()
@@ -324,28 +360,12 @@ class AzuraSettingsDialog(QDialog):
             if m_idx >= 0:
                 self.model_combo.setCurrentIndex(m_idx)
 
-        main_layout.addWidget(llm_box)
+        right_col.addWidget(llm_box)
+        right_col.addStretch(1)
 
-        # 4. Data Sources & Content Packs Group Box
-        ds_box = QGroupBox("Data Sources & Content Packs")
-        ds_layout = QVBoxLayout(ds_box)
-
-        ds_cfg = self.config.get("data_sources", {})
-
-        self.cb_mw = QCheckBox("Morrowind Base Game (Required)")
-        self.cb_mw.setChecked(True)
-        self.cb_mw.setEnabled(False)
-        ds_layout.addWidget(self.cb_mw)
-
-        self.cb_goty = QCheckBox("GOTY Expansions (Tribunal & Bloodmoon)")
-        self.cb_goty.setChecked(ds_cfg.get("goty", True))
-        ds_layout.addWidget(self.cb_goty)
-
-        self.cb_tr = QCheckBox("Tamriel Rebuilt (Mainland & Poison Song)")
-        self.cb_tr.setChecked(ds_cfg.get("tamriel_rebuilt", True))
-        ds_layout.addWidget(self.cb_tr)
-
-        main_layout.addWidget(ds_box)
+        cols_layout.addLayout(left_col, 1)
+        cols_layout.addLayout(right_col, 1)
+        main_layout.addLayout(cols_layout)
 
         # Save / Cancel Buttons
         btn_layout = QHBoxLayout()
